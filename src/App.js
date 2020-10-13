@@ -7,7 +7,7 @@ function App() {
   const [level, setLevel] = useState(1);
   const [board, setBoard] = useState(generateBoard(4, 4, 7));
   const [boardGuess, setBoardGuess] = useState(generateBoard(4, 4, 0));
-  const [guesses, setGuesses] = useState({ total: 7, current: 0 });
+  const [guesses, setGuesses] = useState({ total: 7, current: 0, wrong: 0 });
   const [guess, setGuess] = useState(false);
 
   useEffect(() => {
@@ -16,16 +16,17 @@ function App() {
 
   useEffect(() => {
     if (guesses.current === guesses.total) {
-      setLevel((prev) => prev + 1);
+      const newLevel = level + 1;
+      setLevel(newLevel);
       setTimeout(() => {
-        const newSize = Math.ceil(level / 3) + 3;
+        const newSize = Math.ceil(newLevel / 3) + 3;
         setSize({ rows: newSize, cols: newSize });
         setBoard(
           generateBoard(newSize, newSize, newSize * 2 - 1)
         );
         setBoardGuess(generateBoard(newSize, newSize,  0));
         setGuess(false);
-        setGuesses({ total: newSize + newSize - 1, current: 0 });
+        setGuesses({ total: newSize + newSize - 1, current: 0, wrong: 0 });
       }, 1000);
     }
   }, [guesses]);
@@ -36,11 +37,13 @@ function App() {
   };
 
   const handleClick = (row, col) => {
-    if (guesses.current === guesses.total || !guess) return;
+    if (guesses.current === guesses.total || !guess || boardGuess[row][col] !== false) return;
     const newBoard = [...boardGuess];
-    newBoard[row][col] = board[row][col] === true ? true : null;
+    const isRight = !!board[row][col];
+    newBoard[row][col] = isRight ? true : null;
+    const wasWrong = isRight ? 0 : 1;
     setBoardGuess(newBoard);
-    setGuesses((prev) => ({ ...prev, current: prev.current + 1 }));
+    setGuesses((prev) => ({ ...prev, current: prev.current + 1, wrong: prev.wrong + wasWrong }));
   };
 
   const pieceClass = (row, col) => {

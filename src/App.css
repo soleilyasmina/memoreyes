@@ -15,6 +15,7 @@ h1 {
   width: 80vmin;
   height: 80vmin;
   margin: 20px auto;
+  transition: all 0.2s;
 }
 
 .piece {
