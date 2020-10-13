@@ -1,7 +1,19 @@
+@keyframes load {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+h1 {
+  text-align: center;
+}
 .board {
   display: grid;
-  width: 90vw;
-  height: 90vw;
+  width: 80vmin;
+  height: 80vmin;
   margin: 20px auto;
 }
 
@@ -12,18 +24,25 @@
 }
 
 .active {
-  background-color: #66D7D1;
+  background-color: #66d7d1;
 }
 
 .passive {
-  background-color: #403D58;
+  background-color: #403d58;
 }
 
-.passive:hover {
-  background-color: rgba(64, 61, 88, 0.7);
+.passive:active {
   cursor: pointer;
+  background-color: rgba(64, 61, 88, 0.7);
+}
+
+@media (hover: hover) {
+  .passive:hover {
+    background-color: rgba(64, 61, 88, 0.7);
+    cursor: pointer;
+  }
 }
 
 .failed {
-  background-color: #CC2936;
+  background-color: #cc2936;
 }

@@ -3,40 +3,32 @@ import { generateBoard } from "./services";
 import "./App.css";
 
 function App() {
-  const [size, setSize] = useState({ rows: 7, cols: 7 });
-  const [newRows, setNewRows] = useState(7);
-  const [newCols, setNewCols] = useState(7);
-  const [board, setBoard] = useState(generateBoard(7, 7, 15));
-  const [boardGuess, setBoardGuess] = useState(generateBoard(7, 7, 0));
-  const [guesses, setGuesses] = useState({ total: 15, current: 0 });
+  const [size, setSize] = useState({ rows: 4, cols: 4 });
+  const [level, setLevel] = useState(1);
+  const [board, setBoard] = useState(generateBoard(4, 4, 7));
+  const [boardGuess, setBoardGuess] = useState(generateBoard(4, 4, 0));
+  const [guesses, setGuesses] = useState({ total: 7, current: 0 });
   const [guess, setGuess] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setGuess(true), 2000);
+    setTimeout(() => setGuess(true), 3000);
   }, [board]);
 
   useEffect(() => {
-    setBoard(generateBoard(size.rows, size.cols, size.rows + size.cols - 1));
-    setBoardGuess(generateBoard(size.rows, size.cols, 0));
-  }, [size]);
-
-  useEffect(() => {
     if (guesses.current === guesses.total) {
+      setLevel((prev) => prev + 1);
       setTimeout(() => {
+        const newSize = Math.ceil(level / 3) + 3;
+        setSize({ rows: newSize, cols: newSize });
         setBoard(
-          generateBoard(size.rows, size.cols, size.rows + size.cols - 1)
+          generateBoard(newSize, newSize, newSize * 2 - 1)
         );
-        setBoardGuess(generateBoard(size.rows, size.cols, 0));
+        setBoardGuess(generateBoard(newSize, newSize,  0));
         setGuess(false);
-        setGuesses({ total: size.rows + size.cols - 1, current: 0 });
+        setGuesses({ total: newSize + newSize - 1, current: 0 });
       }, 1000);
     }
-  }, [size, guesses]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSize({ rows: newRows, cols: newCols });
-  };
+  }, [guesses]);
 
   const boardSize = {
     gridTemplateColumns: `repeat(${size.cols}, 1fr)`,
@@ -44,6 +36,7 @@ function App() {
   };
 
   const handleClick = (row, col) => {
+    if (guesses.current === guesses.total || !guess) return;
     const newBoard = [...boardGuess];
     newBoard[row][col] = board[row][col] === true ? true : null;
     setBoardGuess(newBoard);
@@ -66,6 +59,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1>{guesses.total - guesses.current} left!</h1>
       <div className="board" style={boardSize}>
         {boardGuess.map((row, i) => (
           <>
@@ -78,25 +72,6 @@ function App() {
           </>
         ))}
       </div>
-      <form onSubmit={handleSubmit}>
-        <h4>{guesses.total - guesses.current} left!</h4>
-        <label htmlFor="rows">Rows:</label>
-        <input
-          name="rows"
-          value={newRows}
-          type="number"
-          onChange={(e) => setNewRows(Number(e.target.value))}
-        />
-
-        <label htmlFor="cols">Cols:</label>
-        <input
-          name="cols"
-          value={newCols}
-          type="number"
-          onChange={(e) => setNewCols(Number(e.target.value))}
-        />
-        <button type="submit">Change!</button>
-      </form>
     </div>
   );
 }
