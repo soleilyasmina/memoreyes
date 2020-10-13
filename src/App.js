@@ -29,7 +29,7 @@ function App() {
         setGuesses({ total: newSize + newSize - 1, current: 0, wrong: 0 });
       }, 1000);
     }
-  }, [guesses]);
+  }, [level, guesses]);
 
   const boardSize = {
     gridTemplateColumns: `repeat(${size.cols}, 1fr)`,
