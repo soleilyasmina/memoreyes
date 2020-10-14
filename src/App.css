@@ -7,9 +7,37 @@
   }
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
+
+.game-over {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  transition: all 1s ease-in-out;
+  opacity: 0;
+  background: white;
+}
+
+.visible {
+  opacity: 1;
+  z-index: 1000;
+}
+
+.invisible {
+  opacity: 0;
+  z-index: -1000;
+}
+
 .board {
   display: grid;
   width: 80vmin;
