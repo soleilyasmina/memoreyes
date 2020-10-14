@@ -25,8 +25,6 @@ function App() {
     if (loss === true) {
       setLevel(1);
       setTimeout(() => {
-        setBoardGuess(generateBoard(size.rows, size.cols, 0));
-        setBoard(generateBoard(4, 4, 7));
         setScore(0);
         setGuesses({
           total: 7,
@@ -36,9 +34,11 @@ function App() {
         });
       }, 1000);
       setTimeout(() => {
+        setBoardGuess(generateBoard(4, 4, 0));
+        setBoard(generateBoard(4, 4, 0));
+        setSize({ rows: 4, cols: 4 });
         setLoss(false);
         setTimeout(() => {
-          setSize({ rows: 4, cols: 4 });
           setGuess(false);
           setBoard(generateBoard(4, 4, 7));
           setBoardGuess(generateBoard(4, 4, 0));
@@ -120,7 +120,7 @@ function App() {
       <div className={`game-over ${loss ? "visible" : "invisible"}`}>
         <h1>GAME OVER</h1>
       </div>
-      <h1>{guesses.total - guesses.current} left!</h1>
+      <h1>{guesses.current}/{guesses.total}</h1>
       <h2>{score}</h2>
       <div className="board" style={boardSize}>
         {boardGuess.map((row, i) =>
