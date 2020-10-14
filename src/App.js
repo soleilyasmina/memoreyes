@@ -122,10 +122,13 @@ function App() {
       <div className={`game-over ${loss ? "visible" : "invisible"}`}>
         <h1>GAME OVER</h1>
       </div>
-      <h1>
-        {guesses.current}/{guesses.total}
-      </h1>
-      <h2>{score}</h2>
+      <div className="stats">
+        <h3>Level {level}</h3>
+        <h3>{score}</h3>
+        <h3>
+          {guesses.current}/{guesses.total}
+        </h3>
+      </div>
       <div className="board" style={boardSize}>
         {boardGuess.map((row, i) =>
           row.map((col, j) => (

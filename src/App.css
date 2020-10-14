@@ -1,14 +1,30 @@
-@keyframes load {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-h1, h2 {
+.stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80vmin;
+  margin: 0 auto;
+  background: #403D58;
+}
+
+h1, h3 {
   text-align: center;
+  margin: 0;
+  padding: 20px;
+  font-family: 'Karla', sans-serif;
+  font-weight: 400;
+}
+
+h3 {
+  color: #FF934F;
 }
 
 .game-over {
@@ -42,13 +58,13 @@ h1, h2 {
   display: grid;
   width: 80vmin;
   height: 80vmin;
-  margin: 20px auto;
+  margin: 0 auto 20px;
   transition: all 0.2s;
 }
 
 .piece {
   box-sizing: border-box;
-  border: 1px solid white;
+  border: 1px solid #FF934F;
   transition: all 0.2s;
 }
 
