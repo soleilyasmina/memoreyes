@@ -34,15 +34,11 @@ function App() {
         });
       }, 1000);
       setTimeout(() => {
-        setBoardGuess(generateBoard(4, 4, 0));
-        setBoard(generateBoard(4, 4, 0));
-        setSize({ rows: 4, cols: 4 });
         setLoss(false);
-        setTimeout(() => {
-          setGuess(false);
-          setBoard(generateBoard(4, 4, 7));
-          setBoardGuess(generateBoard(4, 4, 0));
-        }, 1000);
+        setBoardGuess(generateBoard(4, 4, 0));
+        setBoard(generateBoard(4, 4, 7));
+        setSize({ rows: 4, cols: 4 });
+        setGuess(false);
       }, 5000);
     }
   }, [loss, size]);
@@ -53,11 +49,17 @@ function App() {
         const newLevel = level + 1;
         const newSize = Math.ceil(newLevel / 3) + 3;
         setSize({ rows: newSize, cols: newSize });
-        setBoard(generateBoard(newSize, newSize, newSize * 2 - 1));
+        setBoard(
+          generateBoard(
+            newSize,
+            newSize,
+            newSize * 2 - 1 + ((newLevel - 1) % 3)
+          )
+        );
         setBoardGuess(generateBoard(newSize, newSize, 0));
         setGuess(false);
         setGuesses({
-          total: newSize + newSize - 1,
+          total: newSize * 2 - 1 + ((newLevel - 1) % 3),
           current: 0,
           wrong: 0,
           correct: 0,
@@ -120,7 +122,9 @@ function App() {
       <div className={`game-over ${loss ? "visible" : "invisible"}`}>
         <h1>GAME OVER</h1>
       </div>
-      <h1>{guesses.current}/{guesses.total}</h1>
+      <h1>
+        {guesses.current}/{guesses.total}
+      </h1>
       <h2>{score}</h2>
       <div className="board" style={boardSize}>
         {boardGuess.map((row, i) =>
