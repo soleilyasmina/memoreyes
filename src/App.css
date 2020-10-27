@@ -4,6 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  max-height: 100vh;
   background: #403D58;
 }
 
@@ -16,12 +17,20 @@
   background: #403D58;
 }
 
+.stats h3:first-child {
+  text-align: left;
+}
+
+.stats h3:last-child {
+  text-align: right;
+}
+
 h1, h3 {
   text-align: center;
   margin: 0;
-  padding: 20px;
   font-family: 'Karla', sans-serif;
   font-weight: 400;
+  width: 75px;
 }
 
 h3 {
@@ -82,13 +91,43 @@ h3 {
   background-color: rgba(64, 61, 88, 0.7);
 }
 
+.failed {
+  background-color: #cc2936;
+}
+
+.refresh-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80vmin;
+}
+
+.refresh-buttons button {
+  background-color: #403d58;
+  font-family: 'Karla', sans-serif;
+  font-weight: 400;
+  color: #FF934F;
+  border: 1px solid #FF934F;
+  padding: 5px;
+  margin: 5px 0;
+  width: 75px;
+  transition: all 0.2s;
+}
+
+.refresh-buttons button:focus {
+  outline: 0px solid white;
+}
+
 @media (hover: hover) {
   .passive:hover {
     background-color: rgba(64, 61, 88, 0.7);
     cursor: pointer;
   }
+
+  .refresh-buttons button:hover {
+    color: #403d58;
+    background-color: #FF934F;
+  }
 }
 
-.failed {
-  background-color: #cc2936;
-}
+

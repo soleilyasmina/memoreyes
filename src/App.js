@@ -16,6 +16,7 @@ function App() {
   const [guess, setGuess] = useState(false);
   const [score, setScore] = useState(0);
   const [loss, setLoss] = useState(false);
+  const [shouldRestart, toggleRestart] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setGuess(true), 3000);
@@ -40,8 +41,22 @@ function App() {
         setSize({ rows: 4, cols: 4 });
         setGuess(false);
       }, 5000);
+    } else if (shouldRestart === true) {
+      setLevel(1);
+      setScore(0);
+      setGuesses({
+        total: 7,
+        current: 0,
+        wrong: 0,
+        correct: 0,
+      });
+      toggleRestart(false);
+      setBoardGuess(generateBoard(4, 4, 0));
+      setBoard(generateBoard(4, 4, 7));
+      setSize({ rows: 4, cols: 4 });
+      setGuess(false);
     }
-  }, [loss, size]);
+  }, [loss, size, shouldRestart]);
 
   useEffect(() => {
     if (guesses.current === guesses.total) {
@@ -117,6 +132,21 @@ function App() {
     }
   };
 
+  const reset = () => {
+    if (guesses.current) return;
+    setBoard(
+      generateBoard(size.cols, size.rows, size.cols * 2 - 1 + ((level - 1) % 3))
+    );
+    setBoardGuess(generateBoard(size.cols, size.rows, 0));
+    setGuess(false);
+    setGuesses({
+      total: size.cols * 2 - 1 + ((level - 1) % 3),
+      current: 0,
+      wrong: 0,
+      correct: 0,
+    });
+  };
+
   return (
     <div className="App">
       <div className={`game-over ${loss ? "visible" : "invisible"}`}>
@@ -128,6 +158,10 @@ function App() {
         <h3>
           {guesses.current}/{guesses.total}
         </h3>
+      </div>
+      <div className="refresh-buttons">
+        <button onClick={reset}>Reset</button>
+        <button onClick={() => toggleRestart(true)}>Restart</button>
       </div>
       <div className="board" style={boardSize}>
         {boardGuess.map((row, i) =>
