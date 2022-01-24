@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const generateBoard = (rows, cols, active) => {
   const board = [];
   for (let i = 0; i < rows; i += 1) {
@@ -19,4 +21,16 @@ export const generateBoard = (rows, cols, active) => {
     }
   }
   return board;
+};
+
+const BASE_URL =
+  process.env.NODE_ENV === "production" ? "https://syms-leaderboard.herokuapp.com" : "http://localhost:3001";
+
+export const getEntries = async () => {
+  const response = await axios.get(BASE_URL);
+  return response.data;
+};
+
+export const postEntry = async (username, score) => {
+  await axios.post(BASE_URL, { username, score });
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { generateBoard } from "./services";
+import { generateBoard, getEntries, postEntry } from "./services";
 import "./App.css";
 
 function App() {
@@ -16,32 +16,23 @@ function App() {
   const [guess, setGuess] = useState(false);
   const [score, setScore] = useState(0);
   const [loss, setLoss] = useState(false);
+  const [leaderboard, setLeaderboard] = useState(false);
   const [shouldRestart, toggleRestart] = useState(false);
+  const [username, setUsername] = useState("");
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    if (leaderboard) {
+      getEntries().then(setEntries);
+    }
+  }, [leaderboard]);
 
   useEffect(() => {
     setTimeout(() => setGuess(true), 3000);
   }, [board]);
 
   useEffect(() => {
-    if (loss === true) {
-      setLevel(1);
-      setTimeout(() => {
-        setScore(0);
-        setGuesses({
-          total: 7,
-          current: 0,
-          wrong: 0,
-          correct: 0,
-        });
-      }, 1000);
-      setTimeout(() => {
-        setLoss(false);
-        setBoardGuess(generateBoard(4, 4, 0));
-        setBoard(generateBoard(4, 4, 7));
-        setSize({ rows: 4, cols: 4 });
-        setGuess(false);
-      }, 5000);
-    } else if (shouldRestart === true) {
+    if (shouldRestart === true) {
       setLevel(1);
       setScore(0);
       setGuesses({
@@ -56,7 +47,7 @@ function App() {
       setSize({ rows: 4, cols: 4 });
       setGuess(false);
     }
-  }, [loss, size, shouldRestart]);
+  }, [size, shouldRestart]);
 
   useEffect(() => {
     if (guesses.current === guesses.total) {
@@ -102,7 +93,16 @@ function App() {
     newBoard[row][col] = isRight ? true : null;
     const wasWrong = isRight ? 0 : 1;
     const wasRight = isRight ? 1 : 0;
-    if (guesses.wrong + wasWrong > guesses.total / 4) {
+    if (
+      guesses.wrong + wasWrong > Math.ceil(guesses.total / 4) &&
+      guesses.current < guesses.total
+    ) {
+      setGuesses((prev) => ({
+        ...prev,
+        current: prev.current + 1,
+        wrong: prev.wrong + wasWrong,
+        correct: prev.correct + wasRight,
+      }));
       setLoss(true);
     } else {
       setBoardGuess(newBoard);
@@ -120,7 +120,7 @@ function App() {
 
   const pieceClass = (row, col) => {
     // no matter what if it's null show failed
-    // if it's not gueesing time
+    // if it's not guessing time
     if (boardGuess[row][col] === null) {
       return " failed";
     } else if (!guess && board[row][col]) {
@@ -147,20 +147,78 @@ function App() {
     });
   };
 
+  const playAgain = () => {
+    setLevel(1);
+    setScore(0);
+    setGuesses({
+      total: 7,
+      current: 0,
+      wrong: 0,
+      correct: 0,
+    });
+    setBoardGuess(generateBoard(4, 4, 0));
+    setBoard(generateBoard(4, 4, 7));
+    setSize({ rows: 4, cols: 4 });
+    setLoss(false);
+    setTimeout(() => {
+      setGuess(false);
+    }, 1000);
+  };
+
+  const submitEntry = (e) => {
+    e.preventDefault();
+    postEntry(username, score);
+    setScore(0);
+  };
+
   return (
     <div className="App">
       <div className={`game-over ${loss ? "visible" : "invisible"}`}>
         <h1>GAME OVER</h1>
+        <form onSubmit={submitEntry}>
+          <input
+            placeholder="Add a name to submit!"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <button disabled={!username.length || !score}>Submit to Leaderboard</button>
+        </form>
+        <button onClick={playAgain}>Play Again?</button>
+      </div>
+      <div className={`leaderboard ${leaderboard ? "visible" : "invisible"}`}>
+        <h1>LEADERBOARD</h1>
+        <hr />
+        <ul>
+          {entries.map((entry, index) => (
+            <li className="flex-row">
+              <span>
+                {index + 1}. {entry.username}
+              </span>
+              <span>{entry.score}</span>
+            </li>
+          ))}
+        </ul>
+        <button onClick={() => setLeaderboard(false)}>Close</button>
       </div>
       <div className="stats">
         <h3>Level {level}</h3>
         <h3>{score}</h3>
         <h3>
-          {guesses.current}/{guesses.total}
+          <div className="guesses flex-row">
+            <span className="failure">
+              {guesses.wrong}/{Math.ceil(guesses.total / 4)}
+            </span>
+            <span>
+              {guesses.current}/{guesses.total}
+            </span>
+          </div>
         </h3>
       </div>
       <div className="refresh-buttons">
-        <button onClick={reset}>Reset</button>
+        <button disabled={!!guesses.current} onClick={reset}>
+          Reset
+        </button>
+        <button onClick={() => setLeaderboard(true)}>Leaderboard</button>
         <button onClick={() => toggleRestart(true)}>Restart</button>
       </div>
       <div className="board" style={boardSize}>

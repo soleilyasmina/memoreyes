@@ -1,3 +1,12 @@
+:root {
+  --text: #ff934f;
+  --background: #403d58;
+  --active: #66d7d1;
+  --failure: #cc2936;
+  --background-faded: rgba(64, 61, 88, 0.7);
+  --text-faded: rgba(255, 147, 79, 0.5);
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -5,7 +14,7 @@
   align-items: center;
   height: 100vh;
   max-height: 100vh;
-  background: #403D58;
+  background: var(--background);
 }
 
 .stats {
@@ -14,7 +23,7 @@
   justify-content: space-between;
   width: 80vmin;
   margin: 0 auto;
-  background: #403D58;
+  background: var(--background);
 }
 
 .stats h3:first-child {
@@ -25,19 +34,27 @@
   text-align: right;
 }
 
-h1, h3 {
+h1,
+h3 {
   text-align: center;
   margin: 0;
-  font-family: 'Karla', sans-serif;
+  font-family: "Karla", sans-serif;
   font-weight: 400;
-  width: 75px;
+  width: fit-content;
+  text-align: center;
+}
+
+li, ul {
+  padding: 0;
+  width: 200px;
 }
 
 h3 {
-  color: #FF934F;
+  color: var(--text);
 }
 
-.game-over {
+.game-over,
+.leaderboard {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -51,7 +68,26 @@ h3 {
   right: 0;
   transition: all 1s ease-in-out;
   opacity: 0;
-  background: white;
+  background: var(--background);
+  color: var(--text);
+}
+
+.leaderboard div, .leaderboard hr {
+  width: 200px;
+}
+
+.leaderboard hr {
+  border: 1px solid var(--text);
+}
+
+.failure {
+  color: var(--failure);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .visible {
@@ -74,25 +110,29 @@ h3 {
 
 .piece {
   box-sizing: border-box;
-  border: 1px solid #FF934F;
+  border: 1px solid var(--text);
   transition: all 0.2s;
 }
 
+.stats h3 {
+  width: 75px;
+}
+
 .active {
-  background-color: #66d7d1;
+  background-color: var(--active);
 }
 
 .passive {
-  background-color: #403d58;
+  background-color: var(--background);
 }
 
 .passive:active {
   cursor: pointer;
-  background-color: rgba(64, 61, 88, 0.7);
+  background-color: var(--background-faded);
 }
 
 .failed {
-  background-color: #cc2936;
+  background-color: var(--failure);
 }
 
 .refresh-buttons {
@@ -100,34 +140,67 @@ h3 {
   flex-direction: row;
   justify-content: space-between;
   width: 80vmin;
+  margin-bottom: 4px;
 }
 
-.refresh-buttons button {
-  background-color: #403d58;
-  font-family: 'Karla', sans-serif;
+.refresh-buttons button,
+.game-over button,
+.leaderboard button {
+  background-color: var(--background);
+  font-family: "Karla", sans-serif;
   font-weight: 400;
-  color: #FF934F;
-  border: 1px solid #FF934F;
+  color: var(--text);
+  border: 1px solid var(--text);
   padding: 5px;
   margin: 5px 0;
-  width: 75px;
+  min-width: 75px;
+  width: fit-content;
   transition: all 0.2s;
+  cursor: pointer;
+}
+
+.game-over form input {
+  background: var(--background);
+  border: 1px solid var(--text);
+  color: var(--text);
+  font-family: "Karla", sans-serif;
+  padding: 5px;
+}
+
+.game-over form input:focus-visible {
+  border: 1px solid var(--text);
+  outline: 1px solid var(--text);
 }
 
 .refresh-buttons button:focus {
   outline: 0px solid white;
 }
 
+.refresh-buttons button:disabled,
+.game-over form button:disabled  {
+  text-decoration: line-through;
+  background-color: var(--background-faded);
+  border: 1px solid var(--text-faded);
+  color: var(--text-faded);
+}
+
 @media (hover: hover) {
   .passive:hover {
-    background-color: rgba(64, 61, 88, 0.7);
+    background-color: var(--background-faded);
     cursor: pointer;
   }
 
-  .refresh-buttons button:hover {
-    color: #403d58;
-    background-color: #FF934F;
+  .refresh-buttons button:hover,
+  .game-over button:hover,
+  .leaderboard button:hover {
+    color: var(--background);
+    background-color: var(--text);
+  }
+
+  .refresh-buttons button:disabled:hover,
+  .game-over button button:disabled:hover, {
+    color: var(--text);
+    background-color: var(--background);
+    cursor: default;
   }
 }
-
-
